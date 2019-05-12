@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: staging-proxy
+spec:
+  type: LoadBalancer
+  selector:
+    app: staging-proxy
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: staging-proxy
+spec:
+  selector:
+    matchLabels:
+      app: staging-proxy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: staging-proxy
+    spec:
+      containers:
+        - name: staging-proxy
+          image: staging-proxy:latest
+          ports:
+            - containerPort: 80
